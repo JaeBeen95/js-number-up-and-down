@@ -3,7 +3,7 @@ import { readLineAsync } from "./input.js";
 const gameState = {
   randomNumber: Math.floor(Math.random() * 50) + 1,
   attempts: 0,
-  input: [],
+  userInput: [],
 };
 
 const validateInputValue = (inputValue) => {
@@ -29,14 +29,17 @@ async function play() {
     if (!validNumber) continue;
 
     gameState.attempts++;
+    gameState.userInput.push(validNumber);
 
     if (validNumber === gameState.randomNumber) {
       console.log(`정답! ${gameState.attempts}번 만에 숫자를 맞추셨습니다.`);
       break;
-    } else if (validNumber > gameState.randomNumber) {
-      console.log("다운");
-    } else {
-      console.log("업");
     }
+
+    console.log(validNumber > gameState.randomNumber ? "다운" : "업");
+    const userGuess = gameState.userInput.join(", ");
+    console.log(`이전 추측: ${userGuess}`);
   }
 }
+
+play();
