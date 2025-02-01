@@ -47,4 +47,13 @@ async function play() {
   }
 }
 
-play();
+async function upAndDownGame() {
+  do {
+    resetGameState();
+    await play();
+  } while (await askToPlayAgain());
+
+  console.log("게임을 종료합니다.");
+}
+
+upAndDownGame();
