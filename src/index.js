@@ -3,6 +3,7 @@ import { readLineAsync } from "./input.js";
 const gameState = {
   randomNumber: Math.floor(Math.random() * 50) + 1,
   attempts: 0,
+  input: [],
 };
 
 const validateInputValue = (inputValue) => {
@@ -13,10 +14,9 @@ const validateInputValue = (inputValue) => {
 
   if (isNotNumber || isNotInteger || isOutOfRange) {
     console.log("1에서 50사이의 숫자 값만 입력해주세요");
-    return false;
   }
 
-  return true;
+  return inputNumber;
 };
 
 async function play() {
@@ -24,19 +24,16 @@ async function play() {
 
   while (true) {
     const inputValue = await readLineAsync("숫자 입력: ");
+    const validNumber = validateInputValue(inputValue);
 
-    if (!validateInputValue(inputValue)) {
-      continue;
-    }
+    if (!validNumber) continue;
 
     gameState.attempts++;
 
-    const userNumber = Number(inputValue);
-
-    if (userNumber === gameState.randomNumber) {
+    if (validNumber === gameState.randomNumber) {
       console.log(`정답! ${gameState.attempts}번 만에 숫자를 맞추셨습니다.`);
       break;
-    } else if (userNumber > gameState.randomNumber) {
+    } else if (validNumber > gameState.randomNumber) {
       console.log("다운");
     } else {
       console.log("업");
