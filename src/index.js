@@ -25,6 +25,22 @@ const validateInputValue = (inputValue) => {
   return inputNumber;
 };
 
+async function askToPlayAgain() {
+  while (true) {
+    const answer = await readLineAsync("게임을 다시 시작하시겠습니까? (yes/no): ");
+    const lowerAnswer = answer.toLowerCase();
+
+    if (lowerAnswer === "yes") {
+      return true;
+    }
+    if (lowerAnswer === "no") {
+      return false;
+    }
+
+    console.log("yes 또는 no만 입력해주세요.");
+  }
+}
+
 async function play() {
   console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
 
