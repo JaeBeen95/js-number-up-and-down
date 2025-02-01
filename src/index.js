@@ -39,6 +39,11 @@ const handleGameResult = (isCorrect, randomNumber, attempts) => {
   return false;
 };
 
+const displayHint = (userNumber, randomNumber, userGuesses) => {
+  console.log(userNumber > randomNumber ? "다운" : "업");
+  console.log(`이전 추측: ${userGuesses.join(", ")}`);
+};
+
 async function play() {
   console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
 
@@ -56,9 +61,7 @@ async function play() {
 
     if (gameFinished) break;
 
-    console.log(validNumber > gameState.randomNumber ? "다운" : "업");
-    const userGuess = gameState.userInput.join(", ");
-    console.log(`이전 추측: ${userGuess}`);
+    displayHint(validNumber, gameState.randomNumber, gameState.userInput);
   }
 }
 
