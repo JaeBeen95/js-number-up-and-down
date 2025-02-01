@@ -6,6 +6,12 @@ const gameState = {
   userInput: [],
 };
 
+const resetGameState = () => {
+  gameState.randomNumber = Math.floor(Math.random() * 50) + 1;
+  gameState.attempts = 0;
+  gameState.userInput = [];
+};
+
 const validateInputValue = (inputValue) => {
   const inputNumber = Number(inputValue);
   const isNotNumber = Number.isNaN(inputNumber);
