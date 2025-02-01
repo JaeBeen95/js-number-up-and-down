@@ -25,6 +25,43 @@ const validateInputValue = (inputValue) => {
   return inputNumber;
 };
 
+const handleGameResult = (isCorrect, randomNumber, attempts) => {
+  if (isCorrect) {
+    console.log(`정답! ${attempts}번 만에 숫자를 맞추셨습니다.`);
+    return true;
+  }
+
+  if (attempts === 5) {
+    console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${randomNumber})`);
+    return true;
+  }
+
+  return false;
+};
+
+async function play() {
+  console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
+
+  while (true) {
+    const inputValue = await readLineAsync("숫자 입력: ");
+    const validNumber = validateInputValue(inputValue);
+    const isCorrect = validNumber === gameState.randomNumber;
+
+    if (!validNumber) continue;
+
+    gameState.attempts++;
+    gameState.userInput.push(validNumber);
+
+    const gameFinished = handleGameResult(isCorrect, gameState.randomNumber, gameState.attempts);
+
+    if (gameFinished) break;
+
+    console.log(validNumber > gameState.randomNumber ? "다운" : "업");
+    const userGuess = gameState.userInput.join(", ");
+    console.log(`이전 추측: ${userGuess}`);
+  }
+}
+
 async function askToPlayAgain() {
   while (true) {
     const answer = await readLineAsync("게임을 다시 시작하시겠습니까? (yes/no): ");
@@ -38,34 +75,6 @@ async function askToPlayAgain() {
     }
 
     console.log("yes 또는 no만 입력해주세요.");
-  }
-}
-
-async function play() {
-  console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
-
-  while (true) {
-    const inputValue = await readLineAsync("숫자 입력: ");
-    const validNumber = validateInputValue(inputValue);
-
-    if (!validNumber) continue;
-
-    gameState.attempts++;
-    gameState.userInput.push(validNumber);
-
-    if (validNumber === gameState.randomNumber) {
-      console.log(`정답! ${gameState.attempts}번 만에 숫자를 맞추셨습니다.`);
-      break;
-    }
-
-    if (gameState.attempts === 5) {
-      console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${gameState.randomNumber})`);
-      break;
-    }
-
-    console.log(validNumber > gameState.randomNumber ? "다운" : "업");
-    const userGuess = gameState.userInput.join(", ");
-    console.log(`이전 추측: ${userGuess}`);
   }
 }
 
