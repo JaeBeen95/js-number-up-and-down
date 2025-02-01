@@ -31,14 +31,14 @@ async function play() {
     gameState.attempts++;
     gameState.userInput.push(validNumber);
 
+    if (validNumber === gameState.randomNumber) {
+      console.log(`정답! ${gameState.attempts}번 만에 숫자를 맞추셨습니다.`);
+      break;
+    }
+
     if (gameState.attempts === 5) {
-      if (validNumber === gameState.randomNumber) {
-        console.log(`정답! ${gameState.attempts}번 만에 숫자를 맞추셨습니다.`);
-        break;
-      } else {
-        console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${gameState.randomNumber})`);
-        break;
-      }
+      console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${gameState.randomNumber})`);
+      break;
     }
 
     console.log(validNumber > gameState.randomNumber ? "다운" : "업");
