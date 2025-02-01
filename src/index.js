@@ -1,6 +1,9 @@
 import { readLineAsync } from "./input.js";
 
-const randomNumber = Math.floor(Math.random() * 50) + 1;
+const gameState = {
+  randomNumber: Math.floor(Math.random() * 50) + 1,
+  attempts: 0,
+};
 
 async function play() {
   console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
