@@ -1,13 +1,19 @@
 import { readLineAsync } from "./input.js";
 
+const getRandomNumber = (startNum, endNum) => {
+  const randomNumber = Math.floor(Math.random() * endNum) + startNum;
+
+  return randomNumber;
+};
+
 const gameState = {
-  randomNumber: Math.floor(Math.random() * 50) + 1,
+  randomNumber: getRandomNumber(1, 50),
   attempts: 0,
   userInput: [],
 };
 
 const resetGameState = () => {
-  gameState.randomNumber = Math.floor(Math.random() * 50) + 1;
+  gameState.randomNumber = getRandomNumber(1, 50);
   gameState.attempts = 0;
   gameState.userInput = [];
 };
