@@ -25,13 +25,13 @@ const validateInputValue = (inputValue) => {
   const isOutOfRange = inputNumber < 1 || inputNumber > 50;
 
   if (isNotNumber || isNotInteger || isOutOfRange) {
-    console.log("1에서 50사이의 숫자 값만 입력해주세요");
+    throw new Error("1에서 50사이의 정수 값만 입력해주세요");
   }
 
   return inputNumber;
 };
 
-const handleGameResult = (isCorrect, randomNumber, attempts) => {
+const handleGameResult = ({ isCorrect, randomNumber, attempts }) => {
   if (isCorrect) {
     console.log(`정답! ${attempts}번 만에 숫자를 맞추셨습니다.`);
     return true;
@@ -54,20 +54,31 @@ async function play() {
   console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
 
   while (true) {
-    const inputValue = await readLineAsync("숫자 입력: ");
-    const validNumber = validateInputValue(inputValue);
-    const isCorrect = validNumber === gameState.randomNumber;
+    try {
+      const inputValue = await readLineAsync("숫자 입력: ");
+      const validNumber = validateInputValue(inputValue);
+      const isCorrect = validNumber === gameState.randomNumber;
 
-    if (!validNumber) continue;
+      gameState.attempts++;
+      gameState.userInput.push(validNumber);
 
-    gameState.attempts++;
-    gameState.userInput.push(validNumber);
+      const gameFinished = handleGameResult({
+        isCorrect,
+        randomNumber: gameState.randomNumber,
+        attempts: gameState.attempts,
+      });
 
-    const gameFinished = handleGameResult(isCorrect, gameState.randomNumber, gameState.attempts);
+      if (gameFinished) break;
 
-    if (gameFinished) break;
-
-    displayHint(validNumber, gameState.randomNumber, gameState.userInput);
+      displayHint({
+        userNumber: validNumber,
+        randomNumber: gameState.randomNumber,
+        userGuesses: gameState.userInput,
+      });
+    } catch (error) {
+      console.log(error.message);
+      continue;
+    }
   }
 }
 
