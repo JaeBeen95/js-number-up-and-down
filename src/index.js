@@ -37,7 +37,7 @@ const handleGameResult = (isCorrect, randomNumber, attempts) => {
     return true;
   }
 
-  if (attempts === 5) {
+  if (attempts >= 5) {
     console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${randomNumber})`);
     return true;
   }
