@@ -6,16 +6,38 @@ const getRandomNumber = (startNum, endNum) => {
   return randomNumber;
 };
 
-const gameState = {
-  randomNumber: getRandomNumber(1, 50),
-  attempts: 0,
-  userInput: [],
-};
+const createGameState = () => {
+  let targetNumber = getRandomNumber(1, 50);
+  let attempts = 0;
+  let guessHistory = [];
 
-const resetGameState = () => {
-  gameState.randomNumber = getRandomNumber(1, 50);
-  gameState.attempts = 0;
-  gameState.userInput = [];
+  return {
+    get targetNumber() {
+      return targetNumber;
+    },
+
+    get attempts() {
+      return attempts;
+    },
+
+    addAttempt() {
+      attempts += 1;
+    },
+
+    get guessHistory() {
+      return [...guessHistory];
+    },
+
+    saveGuess(userGuess) {
+      guessHistory.push(userGuess);
+    },
+
+    reset() {
+      targetNumber = getRandomNumber(1, 50);
+      attempts = 0;
+      guessHistory = [];
+    },
+  };
 };
 
 const validateInputValue = (inputValue) => {
@@ -31,40 +53,41 @@ const validateInputValue = (inputValue) => {
   return inputNumber;
 };
 
-const handleGameResult = ({ isCorrect, randomNumber, attempts }) => {
+const handleGameResult = ({ isCorrect, targetNumber, attempts }) => {
   if (isCorrect) {
     console.log(`정답! ${attempts}번 만에 숫자를 맞추셨습니다.`);
     return true;
   }
 
   if (attempts >= 5) {
-    console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${randomNumber})`);
+    console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${targetNumber})`);
     return true;
   }
 
   return false;
 };
 
-const displayHint = (userNumber, randomNumber, userGuesses) => {
+const displayHint = ({ userNumber, randomNumber, guessHistory }) => {
   console.log(userNumber > randomNumber ? "다운" : "업");
-  console.log(`이전 추측: ${userGuesses.join(", ")}`);
+  console.log(`이전 추측: ${guessHistory}`);
 };
 
 async function play() {
   console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
+  const gameState = createGameState();
 
   while (true) {
     try {
       const inputValue = await readLineAsync("숫자 입력: ");
       const validNumber = validateInputValue(inputValue);
-      const isCorrect = validNumber === gameState.randomNumber;
+      const isCorrect = validNumber === gameState.targetNumber;
 
-      gameState.attempts++;
-      gameState.userInput.push(validNumber);
+      gameState.addAttempt();
+      gameState.saveGuess(validNumber);
 
       const gameFinished = handleGameResult({
         isCorrect,
-        randomNumber: gameState.randomNumber,
+        targetNumber: gameState.targetNumber,
         attempts: gameState.attempts,
       });
 
@@ -72,8 +95,8 @@ async function play() {
 
       displayHint({
         userNumber: validNumber,
-        randomNumber: gameState.randomNumber,
-        userGuesses: gameState.userInput,
+        randomNumber: gameState.targetNumber,
+        guessHistory: gameState.guessHistory,
       });
     } catch (error) {
       console.log(error.message);
@@ -99,8 +122,10 @@ async function askToPlayAgain() {
 }
 
 async function upAndDownGame() {
+  const gameState = createGameState();
+
   do {
-    resetGameState();
+    gameState.reset();
     await play();
   } while (await askToPlayAgain());
 
