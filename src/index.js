@@ -6,8 +6,8 @@ const getRandomNumber = (startNum, endNum) => {
   return randomNumber;
 };
 
-const createGameState = () => {
-  let targetNumber = getRandomNumber(1, 50);
+const createGameState = (startNum, endNum) => {
+  let targetNumber = getRandomNumber(startNum, endNum);
   let attempts = 0;
   let guessHistory = [];
 
@@ -33,7 +33,7 @@ const createGameState = () => {
     },
 
     reset() {
-      targetNumber = getRandomNumber(1, 50);
+      targetNumber = getRandomNumber(startNum, endNum);
       attempts = 0;
       guessHistory = [];
     },
@@ -73,11 +73,21 @@ const displayHint = ({ userNumber, randomNumber, guessHistory }) => {
 };
 
 async function play() {
-  console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
-  const gameState = createGameState();
-
   while (true) {
     try {
+      console.log("[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)");
+      const minAndMaxValue = await readLineAsync("숫자 입력: ");
+      const minAndMaxNumber = minAndMaxValue.trim().split(",").map(Number);
+
+      const minAndMaxObj = {
+        min: Math.min(...minAndMaxNumber),
+        max: Math.max(...minAndMaxNumber),
+      };
+
+      const gameState = createGameState(minAndMaxObj.min, minAndMaxObj.max);
+
+      console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
+
       const inputValue = await readLineAsync("숫자 입력: ");
       const validNumber = validateInputValue(inputValue);
       const isCorrect = validNumber === gameState.targetNumber;
