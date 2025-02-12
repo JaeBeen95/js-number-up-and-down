@@ -42,14 +42,14 @@ const createGameState = (startNum, endNum) => {
   };
 };
 
-const handleGameResult = ({ isAnswerCorrect, answer, attempts }) => {
+const handleGameResult = ({ isAnswerCorrect, answer, attempts, userAttempts }) => {
   if (isAnswerCorrect) {
     console.log(`정답! ${attempts}번 만에 숫자를 맞추셨습니다.`);
     return true;
   }
 
-  if (attempts >= 5) {
-    console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`);
+  if (userAttempts >= attempts) {
+    console.log(`${userAttempts}회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`);
     return true;
   }
 
@@ -70,6 +70,10 @@ async function play() {
 
       const gameState = createGameState(min, max);
 
+      console.log("[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요.");
+      const attemptsInput = await readLineAsync("숫자 입력: ");
+      const userAttempts = validateNumber(attemptsInput);
+
       console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
 
       const guessInput = await readLineAsync("숫자 입력: ");
@@ -83,12 +87,13 @@ async function play() {
         isAnswerCorrect,
         answer: gameState.answer,
         attempts: gameState.attempts,
+        userAttempts,
       });
 
       if (gameFinished) break;
 
       displayHint({
-        guessNumber: guessNumber,
+        guessNumber,
         randomNumber: gameState.answer,
         guessHistory: gameState.guessHistory,
       });
