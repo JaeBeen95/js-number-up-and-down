@@ -4,37 +4,36 @@ import { validateNumber, validateRange } from "./utils/index.js";
 import { displayGameResult, displayHint } from "./display/index.js";
 
 async function initializeRange() {
-  try {
-    console.log("[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)");
-    const rangeInput = await readLineAsync("숫자 입력: ");
-    const { min, max } = validateRange(rangeInput);
-    return { min, max };
-  } catch (error) {
-    console.log(error.message);
-    return initializeRange();
+  while (true) {
+    try {
+      console.log("[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)");
+      const rangeInput = await readLineAsync("숫자 입력: ");
+      const { min, max } = validateRange(rangeInput);
+      return { min, max };
+    } catch (error) {
+      console.log(error.message);
+      console.log("다시 입력해주세요.");
+    }
   }
 }
 
 async function initializeMaxAttempts() {
-  try {
-    console.log("[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요.");
-    const attemptsInput = await readLineAsync("숫자 입력: ");
-    const maxAttempts = validateNumber(attemptsInput);
-    return maxAttempts;
-  } catch (error) {
-    console.log(error.message);
-    return initializeMaxAttempts();
+  while (true) {
+    try {
+      console.log("[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요.");
+      const attemptsInput = await readLineAsync("숫자 입력: ");
+      const maxAttempts = validateNumber(attemptsInput);
+      return maxAttempts;
+    } catch (error) {
+      console.log(error.message);
+      console.log("다시 입력해주세요.");
+    }
   }
 }
 
-async function play() {
-  const { min, max } = await initializeRange();
-  const maxAttempts = await initializeMaxAttempts();
-
-  const gameState = createGameState(min, max);
-
+async function play(gameState) {
   console.log(
-    `컴퓨터가 ${min}~${max} 사이의 숫자를 선택했습니다. ${maxAttempts}회 안에 숫자를 맞춰보세요.`
+    `컴퓨터가 ${gameState.min}~${gameState.max} 사이의 숫자를 선택했습니다. ${gameState.maxAttempts}회 안에 숫자를 맞춰보세요.`
   );
 
   while (true) {
@@ -50,7 +49,7 @@ async function play() {
         isAnswerCorrect,
         answer: gameState.answer,
         attempts: gameState.attempts,
-        maxAttempts: maxAttempts,
+        maxAttempts: gameState.maxAttempts,
       });
 
       if (gameFinished) break;
@@ -84,11 +83,14 @@ async function askToPlayAgain() {
 }
 
 async function upAndDownGame() {
-  const gameState = createGameState();
+  const { min, max } = await initializeRange();
+  const maxAttempts = await initializeMaxAttempts();
+
+  const gameState = createGameState(min, max, maxAttempts);
 
   do {
     gameState.reset();
-    await play();
+    await play(gameState);
   } while (await askToPlayAgain());
 
   console.log("게임을 종료합니다.");
