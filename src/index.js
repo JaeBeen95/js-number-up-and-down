@@ -1,4 +1,6 @@
 import { readLineAsync } from "./input.js";
+import { validateNumber } from "./utils/validateNumber.js";
+import { validateRange } from "./utils/validateRange.js";
 
 const getRandomNumber = (startNum, endNum) => {
   const randomNumber = Math.floor(Math.random() * endNum) + startNum;
@@ -7,13 +9,13 @@ const getRandomNumber = (startNum, endNum) => {
 };
 
 const createGameState = (startNum, endNum) => {
-  let targetNumber = getRandomNumber(startNum, endNum);
+  let answer = getRandomNumber(startNum, endNum);
   let attempts = 0;
   let guessHistory = [];
 
   return {
-    get targetNumber() {
-      return targetNumber;
+    get answer() {
+      return answer;
     },
 
     get attempts() {
@@ -33,42 +35,29 @@ const createGameState = (startNum, endNum) => {
     },
 
     reset() {
-      targetNumber = getRandomNumber(startNum, endNum);
+      answer = getRandomNumber(startNum, endNum);
       attempts = 0;
       guessHistory = [];
     },
   };
 };
 
-const validateInputValue = (inputValue) => {
-  const inputNumber = Number(inputValue);
-  const isNotNumber = Number.isNaN(inputNumber);
-  const isNotInteger = !Number.isInteger(inputNumber);
-  const isOutOfRange = inputNumber < 1 || inputNumber > 50;
-
-  if (isNotNumber || isNotInteger || isOutOfRange) {
-    throw new Error("1에서 50사이의 정수 값만 입력해주세요");
-  }
-
-  return inputNumber;
-};
-
-const handleGameResult = ({ isCorrect, targetNumber, attempts }) => {
-  if (isCorrect) {
+const handleGameResult = ({ isAnswerCorrect, answer, attempts }) => {
+  if (isAnswerCorrect) {
     console.log(`정답! ${attempts}번 만에 숫자를 맞추셨습니다.`);
     return true;
   }
 
   if (attempts >= 5) {
-    console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${targetNumber})`);
+    console.log(`5회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`);
     return true;
   }
 
   return false;
 };
 
-const displayHint = ({ userNumber, randomNumber, guessHistory }) => {
-  console.log(userNumber > randomNumber ? "다운" : "업");
+const displayHint = ({ guessNumber, randomNumber, guessHistory }) => {
+  console.log(guessNumber > randomNumber ? "다운" : "업");
   console.log(`이전 추측: ${guessHistory}`);
 };
 
@@ -76,36 +65,31 @@ async function play() {
   while (true) {
     try {
       console.log("[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)");
-      const minAndMaxValue = await readLineAsync("숫자 입력: ");
-      const minAndMaxNumber = minAndMaxValue.trim().split(",").map(Number);
+      const rangeInput = await readLineAsync("숫자 입력: ");
+      const { min, max } = validateRange(rangeInput);
 
-      const minAndMaxObj = {
-        min: Math.min(...minAndMaxNumber),
-        max: Math.max(...minAndMaxNumber),
-      };
-
-      const gameState = createGameState(minAndMaxObj.min, minAndMaxObj.max);
+      const gameState = createGameState(min, max);
 
       console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
 
-      const inputValue = await readLineAsync("숫자 입력: ");
-      const validNumber = validateInputValue(inputValue);
-      const isCorrect = validNumber === gameState.targetNumber;
+      const guessInput = await readLineAsync("숫자 입력: ");
+      const guessNumber = validateNumber(guessInput);
+      const isAnswerCorrect = guessNumber === gameState.answer;
 
       gameState.addAttempt();
-      gameState.saveGuess(validNumber);
+      gameState.saveGuess(guessNumber);
 
       const gameFinished = handleGameResult({
-        isCorrect,
-        targetNumber: gameState.targetNumber,
+        isAnswerCorrect,
+        answer: gameState.answer,
         attempts: gameState.attempts,
       });
 
       if (gameFinished) break;
 
       displayHint({
-        userNumber: validNumber,
-        randomNumber: gameState.targetNumber,
+        guessNumber: guessNumber,
+        randomNumber: gameState.answer,
         guessHistory: gameState.guessHistory,
       });
     } catch (error) {
