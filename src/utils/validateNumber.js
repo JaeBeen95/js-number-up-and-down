@@ -1,4 +1,4 @@
-export const validateNumber = (inputValue) => {
+const validateNumber = (inputValue) => {
   const inputNumber = Number(inputValue);
   const isNotNumber = Number.isNaN(inputNumber);
   const isNotInteger = !Number.isInteger(inputNumber);
@@ -9,3 +9,5 @@ export const validateNumber = (inputValue) => {
 
   return inputNumber;
 };
+
+export default validateNumber;

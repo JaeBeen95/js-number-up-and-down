@@ -1,6 +1,6 @@
-import { validateNumber } from "./validateNumber.js";
+import validateNumber from "./validateNumber.js";
 
-export const validateRange = (inputValue) => {
+const validateRange = (inputValue) => {
   if (!inputValue) throw new Error("값을 입력해주세요");
 
   const isValidFormat = /^\d+,\d+$/.test(inputValue.trim());
@@ -16,3 +16,5 @@ export const validateRange = (inputValue) => {
     max: Math.max(...validNumbers),
   };
 };
+
+export default validateRange;

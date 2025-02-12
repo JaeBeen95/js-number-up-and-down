@@ -1,65 +1,7 @@
 import { readLineAsync } from "./input.js";
-import { validateNumber } from "./utils/validateNumber.js";
-import { validateRange } from "./utils/validateRange.js";
-
-const getRandomNumber = (startNum, endNum) => {
-  const randomNumber = Math.floor(Math.random() * endNum) + startNum;
-
-  return randomNumber;
-};
-
-const createGameState = (startNum, endNum) => {
-  let answer = getRandomNumber(startNum, endNum);
-  let attempts = 0;
-  let guessHistory = [];
-
-  return {
-    get answer() {
-      return answer;
-    },
-
-    get attempts() {
-      return attempts;
-    },
-
-    addAttempt() {
-      attempts += 1;
-    },
-
-    get guessHistory() {
-      return [...guessHistory];
-    },
-
-    saveGuess(userGuess) {
-      guessHistory.push(userGuess);
-    },
-
-    reset() {
-      answer = getRandomNumber(startNum, endNum);
-      attempts = 0;
-      guessHistory = [];
-    },
-  };
-};
-
-const handleGameResult = ({ isAnswerCorrect, answer, attempts, maxAttempts }) => {
-  if (isAnswerCorrect) {
-    console.log(`정답! ${attempts}번 만에 숫자를 맞추셨습니다.`);
-    return true;
-  }
-
-  if (attempts >= maxAttempts) {
-    console.log(`${maxAttempts}회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`);
-    return true;
-  }
-
-  return false;
-};
-
-const displayHint = ({ guessNumber, randomNumber, guessHistory }) => {
-  console.log(guessNumber > randomNumber ? "다운" : "업");
-  console.log(`이전 추측: ${guessHistory}`);
-};
+import { createGameState } from "./store/createGameState.js";
+import { validateNumber, validateRange } from "./utils/index.js";
+import { displayGameResult, displayHint } from "./display/index.js";
 
 async function initializeRange() {
   try {
@@ -104,7 +46,7 @@ async function play() {
       gameState.addAttempt();
       gameState.saveGuess(guessNumber);
 
-      const gameFinished = handleGameResult({
+      const gameFinished = displayGameResult({
         isAnswerCorrect,
         answer: gameState.answer,
         attempts: gameState.attempts,
