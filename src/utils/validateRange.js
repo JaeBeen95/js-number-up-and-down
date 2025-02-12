@@ -1,4 +1,4 @@
-import { validateNumber } from "./validateNumber";
+import { validateNumber } from "./validateNumber.js";
 
 export const validateRange = (inputValue) => {
   if (!inputValue) throw new Error("값을 입력해주세요");
