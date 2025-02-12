@@ -61,18 +61,40 @@ const displayHint = ({ guessNumber, randomNumber, guessHistory }) => {
   console.log(`이전 추측: ${guessHistory}`);
 };
 
+async function initializeRange() {
+  try {
+    console.log("[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)");
+    const rangeInput = await readLineAsync("숫자 입력: ");
+    const { min, max } = validateRange(rangeInput);
+    return { min, max };
+  } catch (error) {
+    console.log(error.message);
+    return initializeRange();
+  }
+}
+
+async function initializeMaxAttempts() {
+  try {
+    console.log("[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요.");
+    const attemptsInput = await readLineAsync("숫자 입력: ");
+    const maxAttempts = validateNumber(attemptsInput);
+    return maxAttempts;
+  } catch (error) {
+    console.log(error.message);
+    return initializeMaxAttempts();
+  }
+}
+
 async function play() {
-  console.log("[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)");
-  const rangeInput = await readLineAsync("숫자 입력: ");
-  const { min, max } = validateRange(rangeInput);
+  const { min, max } = await initializeRange();
+  const maxAttempts = await initializeMaxAttempts();
 
   const gameState = createGameState(min, max);
 
-  console.log("[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요.");
-  const attemptsInput = await readLineAsync("숫자 입력: ");
-  const maxAttempts = validateNumber(attemptsInput);
+  console.log(
+    `컴퓨터가 ${min}~${max} 사이의 숫자를 선택했습니다. ${maxAttempts}회 안에 숫자를 맞춰보세요.`
+  );
 
-  console.log("컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.");
   while (true) {
     try {
       const guessInput = await readLineAsync("숫자 입력: ");
