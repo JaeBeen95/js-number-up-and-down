@@ -1,4 +1,4 @@
-import { readLineAsync } from "./input.js";
+import readLineAsync from "./input.js";
 import { validateRange } from "../utils/index.js";
 
 async function askRange() {

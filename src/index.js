@@ -1,7 +1,6 @@
 import { createGameState } from "./store/createGameState.js";
-import { validateNumber } from "./utils/index.js";
 import { displayGameResult, displayHint } from "./display/index.js";
-import { readLineAsync, askRange, askMaxAttempts, askToPlayAgain } from "./user/index.js";
+import { askRange, askMaxAttempts, askToPlayAgain, askUserGuess } from "./user/index.js";
 
 async function play(gameState) {
   console.log(
@@ -10,15 +9,12 @@ async function play(gameState) {
 
   while (true) {
     try {
-      const guessInput = await readLineAsync("숫자 입력: ");
-      const guessNumber = validateNumber(guessInput);
-      const isAnswerCorrect = guessNumber === gameState.answer;
-
+      const guessNumber = await askUserGuess();
       gameState.addAttempt();
       gameState.saveGuess(guessNumber);
 
       const gameFinished = displayGameResult({
-        isAnswerCorrect,
+        isAnswerCorrect: guessNumber === gameState.answer,
         answer: gameState.answer,
         attempts: gameState.attempts,
         maxAttempts: gameState.maxAttempts,

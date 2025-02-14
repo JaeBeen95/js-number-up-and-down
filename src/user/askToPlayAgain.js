@@ -1,3 +1,5 @@
+import readLineAsync from "./input.js";
+
 async function askToPlayAgain() {
   while (true) {
     const answer = await readLineAsync("게임을 다시 시작하시겠습니까? (yes/no): ");
@@ -14,4 +16,4 @@ async function askToPlayAgain() {
   }
 }
 
-export default askToPlayAgain
+export default askToPlayAgain;

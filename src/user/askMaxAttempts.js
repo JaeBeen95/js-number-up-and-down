@@ -1,3 +1,6 @@
+import readLineAsync from "./input.js";
+import { validateNumber } from "../utils/index.js";
+
 async function askMaxAttempts() {
   while (true) {
     try {
