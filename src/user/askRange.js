@@ -10,7 +10,6 @@ async function askRange() {
       return { min, max };
     } catch (error) {
       console.log(error.message);
-      console.log("다시 입력해주세요.");
     }
   }
 }
