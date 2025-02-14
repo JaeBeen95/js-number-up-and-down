@@ -3,12 +3,12 @@ import { askRange, askMaxAttempts, askToPlayAgain } from "../user/index.js";
 import play from "./play.js";
 
 async function upAndDownGame() {
-  const { min, max } = await askRange();
-  const maxAttempts = await askMaxAttempts();
-
-  const gameState = createGameState(min, max, maxAttempts);
-
   do {
+    const { min, max } = await askRange();
+    const maxAttempts = await askMaxAttempts();
+
+    const gameState = createGameState(min, max, maxAttempts);
+
     gameState.reset();
     await play(gameState);
   } while (await askToPlayAgain());
