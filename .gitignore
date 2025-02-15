@@ -21,3 +21,8 @@ dist
 *.njsproj
 *.sln
 *.sw?
+
+# Jest coverage
+coverage/
+.coverage
+coverage.json
