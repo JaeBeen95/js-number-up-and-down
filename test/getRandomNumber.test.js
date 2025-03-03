@@ -1,6 +1,6 @@
 import { getRandomNumber } from "../src/utils";
 
-describe("getRandomNumber", () => {
+describe("getRandomNumber 테스트", () => {
   test("생성된 숫자가 범위 내에 있는지 테스트", () => {
     const min = 1;
     const max = 10;
