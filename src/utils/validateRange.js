@@ -1,20 +1,20 @@
-import validateNumber from "./validateNumber.js";
+import validateNumber from "./validateNumber";
 
 const validateRange = (inputValue) => {
-  if (!inputValue) throw new Error("값을 입력해주세요");
+  if (!inputValue || typeof inputValue !== "string") {
+    throw new Error("값을 입력해주세요");
+  }
 
-  const isValidFormat = /^\d+,\d+$/.test(inputValue.trim());
+  const numbers = inputValue.split(",").map((num) => num.trim());
 
-  if (!isValidFormat) throw new Error("정수, 정수 형태로 입력해주세요");
-
-  const numbers = inputValue.trim().split(",");
+  const hasEmptyValue = numbers.includes("");
+  if (numbers.length !== 2 || hasEmptyValue) {
+    throw new Error("두 개의 정수를 입력해주세요");
+  }
 
   const validNumbers = numbers.map((num) => validateNumber(num));
 
-  return {
-    min: Math.min(...validNumbers),
-    max: Math.max(...validNumbers),
-  };
+  return { min: Math.min(...validNumbers), max: Math.max(...validNumbers) };
 };
 
 export default validateRange;

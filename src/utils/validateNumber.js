@@ -3,15 +3,14 @@ const validateNumber = (inputValue) => {
     throw new Error("값을 입력해주세요.");
   }
 
-  const inputNumber = Number(inputValue);
-  const isNotNumber = Number.isNaN(inputNumber);
-  const isNotInteger = !Number.isInteger(inputNumber);
+  const trimmedValue = inputValue.trim();
 
-  if (isNotNumber || isNotInteger) {
-    throw new Error("정수 값만 입력해주세요");
+  const pattern = /^[1-9]\d*$/;
+  if (!pattern.test(trimmedValue)) {
+    throw new Error("0을 제외한 양의 정수를 입력해주세요");
   }
 
-  return inputNumber;
+  return Number(trimmedValue);
 };
 
 export default validateNumber;
