@@ -1,47 +1,36 @@
 import { getRandomNumber } from "../utils/index.js";
 
-export const createGameState = (min, max, maxAttempts) => {
-  let answer = getRandomNumber(min, max);
-  let attempts = 0;
-  let guessHistory = [];
+export class CreateGameState {
+  #answer;
+  #attempts;
+  #guessHistory;
 
-  return {
-    get answer() {
-      return answer;
-    },
+  constructor(min, max, maxAttempts) {
+    this.min = min;
+    this.max = max;
+    this.maxAttempts = maxAttempts;
+    this.#answer = getRandomNumber(min, max);
+    this.#attempts = 0;
+    this.#guessHistory = [];
+  }
 
-    get attempts() {
-      return attempts;
-    },
+  get answer() {
+    return this.#answer;
+  }
 
-    get min() {
-      return min;
-    },
+  get attempts() {
+    return this.#attempts;
+  }
 
-    get max() {
-      return max;
-    },
+  get guessHistory() {
+    return [...this.#guessHistory];
+  }
 
-    get maxAttempts() {
-      return maxAttempts;
-    },
+  addAttempt() {
+    this.#attempts += 1;
+  }
 
-    addAttempt() {
-      attempts += 1;
-    },
-
-    get guessHistory() {
-      return [...guessHistory];
-    },
-
-    saveGuess(userGuess) {
-      guessHistory.push(userGuess);
-    },
-
-    reset() {
-      answer = getRandomNumber(min, max);
-      attempts = 0;
-      guessHistory = [];
-    },
-  };
-};
+  saveGuess(userGuess) {
+    this.#guessHistory.push(userGuess);
+  }
+}

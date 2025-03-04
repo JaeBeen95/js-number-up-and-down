@@ -1,13 +1,13 @@
-import { createGameState } from "./createGameState";
+import { CreateGameState } from "./createGameState";
 
-describe("createGameState 테스트", () => {
+describe("CreateGameState 테스트", () => {
   const min = 1;
   const max = 100;
   const maxAttempts = 5;
   let gameState;
 
   beforeEach(() => {
-    gameState = createGameState(min, max, maxAttempts);
+    gameState = new CreateGameState(min, max, maxAttempts);
   });
 
   test("초기 상태의 값들을 올바르게 반환하는지 테스트", () => {
@@ -34,14 +34,14 @@ describe("createGameState 테스트", () => {
     expect(gameState.guessHistory).toEqual([50, 51]);
   });
 
-  test("reset이 gameState를 초기 상태로 리셋하는지 테스트", () => {
+  test("새 게임을 시작할 때 상태가 리셋되는지 테스트", () => {
     gameState.addAttempt();
     gameState.saveGuess(50);
 
-    expect(gameState.attempts).toBeGreaterThan(0);
+    expect(gameState.attempts).toBe(1);
     expect(gameState.guessHistory).toEqual([50]);
 
-    gameState.reset();
+    gameState = new CreateGameState(min, max, maxAttempts);
 
     expect(gameState.attempts).toBe(0);
     expect(gameState.guessHistory).toEqual([]);

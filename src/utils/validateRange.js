@@ -1,4 +1,4 @@
-import validateNumber from "./validateNumber";
+import { validateNumber } from "../utils/index.js";
 
 const validateRange = (inputValue) => {
   if (!inputValue || typeof inputValue !== "string") {
