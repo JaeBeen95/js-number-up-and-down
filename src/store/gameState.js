@@ -1,6 +1,6 @@
 import { getRandomNumber } from "../utils/index.js";
 
-export class CreateGameState {
+export class GameState {
   #answer;
   #attempts;
   #guessHistory;

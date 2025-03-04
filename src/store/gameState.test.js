@@ -1,4 +1,4 @@
-import { CreateGameState } from "./createGameState";
+import { GameState } from "./gameState";
 
 describe("CreateGameState 테스트", () => {
   const min = 1;
@@ -7,7 +7,7 @@ describe("CreateGameState 테스트", () => {
   let gameState;
 
   beforeEach(() => {
-    gameState = new CreateGameState(min, max, maxAttempts);
+    gameState = new GameState(min, max, maxAttempts);
   });
 
   test("초기 상태의 값들을 올바르게 반환하는지 테스트", () => {
@@ -41,7 +41,7 @@ describe("CreateGameState 테스트", () => {
     expect(gameState.attempts).toBe(1);
     expect(gameState.guessHistory).toEqual([50]);
 
-    gameState = new CreateGameState(min, max, maxAttempts);
+    gameState = new GameState(min, max, maxAttempts);
 
     expect(gameState.attempts).toBe(0);
     expect(gameState.guessHistory).toEqual([]);
