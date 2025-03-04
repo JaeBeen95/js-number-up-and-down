@@ -8,6 +8,9 @@
   "license": "MIT",
   "private": true,
   "type": "module",
+  "jest": {
+    "transform": {}
+  },
   "scripts": {
     "dev": "yarn build --watch",
     "build": "esbuild src/index.js --bundle --outdir=dist",
