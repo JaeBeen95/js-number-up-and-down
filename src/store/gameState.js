@@ -9,7 +9,11 @@ export class GameState {
     this.min = min;
     this.max = max;
     this.maxAttempts = maxAttempts;
-    this.#answer = getRandomNumber(min, max);
+    this.#initializeState();
+  }
+
+  #initializeState() {
+    this.#answer = getRandomNumber(this.min, this.max);
     this.#attempts = 0;
     this.#guessHistory = [];
   }

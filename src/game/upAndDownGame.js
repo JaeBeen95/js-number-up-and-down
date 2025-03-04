@@ -9,7 +9,6 @@ async function upAndDownGame() {
 
     const gameState = new GameState(min, max, maxAttempts);
 
-    gameState.reset();
     await play(gameState);
   } while (await askToPlayAgain());
 

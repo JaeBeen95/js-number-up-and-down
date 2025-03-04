@@ -34,7 +34,7 @@ describe("CreateGameState 테스트", () => {
     expect(gameState.guessHistory).toEqual([50, 51]);
   });
 
-  test("새 게임을 시작할 때 상태가 리셋되는지 테스트", () => {
+  test("새 게임을 시작할 때 상태가 초기화되는지 테스트", () => {
     gameState.addAttempt();
     gameState.saveGuess(50);
 
