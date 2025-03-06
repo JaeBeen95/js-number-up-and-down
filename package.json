@@ -8,11 +8,14 @@
   "license": "MIT",
   "private": true,
   "type": "module",
+  "jest": {
+    "transform": {}
+  },
   "scripts": {
     "dev": "yarn build --watch",
     "build": "esbuild src/index.js --bundle --outdir=dist",
     "start": "node dist/index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --no-watchman"
   },
   "devDependencies": {
     "@babel/core": "^7.26.9",
